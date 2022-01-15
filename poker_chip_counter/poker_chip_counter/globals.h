@@ -10,6 +10,8 @@
 #include <cmath>
 #include <assert.h>
 #include <vector>
+#include <stdlib.h>
+
 
 using std::cout;
 using std::cin;
@@ -22,12 +24,15 @@ class Player
     Player(std::string name_str, int buy_in){
         stack = buy_in;
         name = name_str;
+        total_buys = buy_in;
     };
     void re_buy(int rebuy){
         stack += rebuy;
+        total_buys += rebuy;
     }
     std::string name;
     int stack;
+    int total_buys;
 };
 
 // this holds all the players
@@ -37,6 +42,8 @@ extern std::vector< Player* > table;
 
 extern int little_blind;
 extern int big_blind;
+extern int dealer;
+
 bool is_number(std::string s);
 void print_instructions();
 void get_players();

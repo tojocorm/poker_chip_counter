@@ -25,7 +25,6 @@ void get_players(){
         cin >> instruction >> name >> buy_in;
         switch(instruction) {
             case 'N'  :
-                
                 if( add_player(name, buy_in) ){
                     break;
                 }
@@ -79,6 +78,7 @@ bool add_player(std::string player_name, std::string buy_in){
     else{
         cout << "Player: " << player_name << ", Stack: " << player_chips << endl;
         players[player_name] = new Player(player_name, player_chips);
+        table.push_back(players[player_name]);
         return true;
     }
 }
@@ -99,6 +99,7 @@ bool fix_player(std::string player_name, std::string buy_in){
     else{
         cout << "Player: " << player_name << ", Stack: " << player_chips << endl;
         players[player_name]->stack = player_chips;
+        players[player_name]->total_buys = player_chips;
         return true;
     }
 }

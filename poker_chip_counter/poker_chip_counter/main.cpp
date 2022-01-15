@@ -9,11 +9,11 @@ std::vector< Player* > table;
 
 int little_blind;
 int big_blind;
-
+int dealer;
 void run_game(){
     print_instructions();
     get_players();
-    
+    dealer = rand() % players.size();
     
 }
 
