@@ -14,16 +14,6 @@ void run_game(){
     print_instructions();
     get_players();
     
-
-    cout << move_vec[turn] << "move: ";
-
-    std::string play;
-    std::string src;
-    std::string dst;
-    
-    while(cin >> src >> dst){
-
-    }
     
 }
 

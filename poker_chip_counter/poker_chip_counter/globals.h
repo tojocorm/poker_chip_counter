@@ -37,10 +37,12 @@ extern std::vector< Player* > table;
 
 extern int little_blind;
 extern int big_blind;
-
+bool is_number(std::string s);
 void print_instructions();
 void get_players();
 void error_in_player_entry();
-bool add_player(string player_name, int player_chips);
-bool fix_player(string player_name, int player_chips);
+bool add_player(std::string player_name, std::string buy_in);
+bool fix_player(std::string player_name, std::string buy_in);
+bool remove_player(std::string name);
+
 #endif
