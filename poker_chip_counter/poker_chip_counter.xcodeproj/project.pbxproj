@@ -25,6 +25,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AAAB04F12794DD09001E1F5F /* test1.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test1.txt; sourceTree = "<group>"; };
+		AAAB04F22794E52F001E1F5F /* test1out.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test1out.txt; sourceTree = "<group>"; };
 		AAB25F4A2792868000EA45F2 /* poker_chip_counter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = poker_chip_counter; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAB25F4D2792868000EA45F2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		AAB25F542792871700EA45F2 /* gui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gui.cpp; sourceTree = "<group>"; };
@@ -68,6 +70,8 @@
 				AAB25F542792871700EA45F2 /* gui.cpp */,
 				AAB25F572792871700EA45F2 /* gui.h */,
 				AAB25F4D2792868000EA45F2 /* main.cpp */,
+				AAAB04F22794E52F001E1F5F /* test1out.txt */,
+				AAAB04F12794DD09001E1F5F /* test1.txt */,
 			);
 			path = poker_chip_counter;
 			sourceTree = "<group>";
