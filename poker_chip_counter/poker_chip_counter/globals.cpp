@@ -99,8 +99,7 @@ bool fix_player(std::string player_name, std::string buy_in){
     }
     else{
         cout << "Player: " << player_name << ", Stack: " << player_chips << endl;
-        players[player_name]->stack = player_chips;
-        players[player_name]->total_buys = player_chips;
+        players[player_name]->set_stack_and_buy(player_chips, player_chips);
         return true;
     }
 }
@@ -111,7 +110,7 @@ bool remove_player(std::string player_name){
         return true;
     }
     else{
-        cout << "Player: " << player_name << " removed from game with Stack: " << players[player_name]->stack << endl;
+        cout << "Player: " << player_name << " removed from game with Stack: " << players[player_name]->get_stack() << endl;
         delete players[player_name];
         players.erase(player_name);
         return true;
@@ -131,9 +130,59 @@ bool load_from_file(std::string filename){
         return false;
     }
     std::string in;
-    while(getline(File, in)){
-        
+    if(!getline(File, in)){
+        std::cout << "empty file, try again" << endl;
+        return false;
+    };
+    if(in != "POKER HISTORY"){
+        cout << "Not a history file" << endl;
+        return false;
     }
+    
+
+    while(getline(File, in)){
+        std::vector<std::string> first_line = split_space(in);
+        std::string name = first_line[0];
+        int curr_stack;
+        int curr_buys;
+
+        // game in progress
+        if(first_line.size() > 1){
+            curr_stack = std::stoi(first_line[2]);
+            curr_buys = std::stoi(first_line[1]);
+            players[name] = new Player(name, curr_buys);
+            players[name]->set_stack_and_buy(curr_stack, curr_buys);
+            table.push_back(players[name]);
+            cout << "Player initialized with name: " << name << ", current buys: " << curr_buys << ", current stack: " << curr_stack << endl;
+        }
+
+        // new game or new player
+        else{
+            cout << "How many chips would you like this player to buy in with -- enter 0 if not playing." << endl;
+            cin >> curr_buys;
+            if(curr_buys != 0){
+                players[name] = new Player(name, curr_buys);
+                table.push_back(players[name]);
+                cout << "Player initialized with name: " << name << ", current buys: " << curr_buys << ", current stack: " << curr_buys << endl;
+            }
+            else{
+                cout << "Player: " << name << " not playing in this game" << endl;
+                players[name] = new Player(name, 0);
+            }
+        }
+
+        getline(File, in);
+        std::vector<std::string> history = split_space(in);
+        std::vector<std::pair<int, int> > history_player;
+        for(size_t i = 0; i < history.size()/2; ++i){
+            std::pair<int, int> in_out = std::make_pair(std::stoi(history[2*i]), std::stoi(history[2*i + 1]));
+            history_player.push_back(in_out);
+        }
+        players[name]->set_history(history_player);
+    }
+
+    
+    
     File.close();
     return true;
 }
@@ -141,4 +190,24 @@ bool load_from_file(std::string filename){
 bool write_to_file(std::string filename){
     
     return true;
+}
+
+// This function returns a vector of strings split by spaces in input
+std::vector<std::string> split_space(std::string input){
+    std::vector<std::string> ret_vec;
+    size_t pos = 0;
+    std::string delimiter = " ";
+    // While we can find a delimiter
+    while ((pos = input.find(delimiter)) != std::string::npos) {
+        // Find the token from the index 0 position of the delimiter
+        std::string token = input.substr(0, pos);
+        // Add token to return
+        ret_vec.push_back(token);
+        // Erase token through next delimiter
+        input.erase(0, pos + 1);
+    }
+
+    // Push back the last pathname
+    ret_vec.push_back(input);
+    return ret_vec;
 }

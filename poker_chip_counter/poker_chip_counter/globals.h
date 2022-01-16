@@ -29,9 +29,26 @@ class Player
         stack += rebuy;
         total_buys += rebuy;
     }
+    void set_stack_and_buy(int stack, int buy){
+        
+    }
+    
+    void set_history(std::vector<std::pair<int, int> > history_in){
+        
+    }
+    
+    int get_stack(){
+        return stack;
+    }
+    int get_buys(){
+        return total_buys;
+    }
+    
+private:
     std::string name;
     int stack;
     int total_buys;
+    std::vector<std::pair<int, int> > history;
 };
 
 // this holds all the players
@@ -53,5 +70,6 @@ bool fix_player(std::string player_name, std::string buy_in);
 bool remove_player(std::string name);
 bool load_from_file(std::string filename);
 bool write_to_file(std::string filename);
+std::vector<std::string> split_space(std::string buys);
 
 #endif
