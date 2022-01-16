@@ -12,7 +12,6 @@
 #include <vector>
 #include <stdlib.h>
 
-
 using std::cout;
 using std::cin;
 using std::endl;
@@ -47,9 +46,12 @@ extern int dealer;
 bool is_number(std::string s);
 void print_instructions();
 void get_players();
+void load_players(std::string filename);
 void error_in_player_entry();
 bool add_player(std::string player_name, std::string buy_in);
 bool fix_player(std::string player_name, std::string buy_in);
 bool remove_player(std::string name);
+bool load_from_file(std::string filename);
+bool write_to_file(std::string filename);
 
 #endif

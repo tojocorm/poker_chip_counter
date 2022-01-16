@@ -57,7 +57,8 @@ void get_players(){
                 error_in_player_entry();
         }
     }
-    
+}
+void load_players(std::string filename){
     
 }
 
@@ -121,4 +122,23 @@ bool is_number(std::string s){
     std::string::const_iterator it = s.begin();
     while (it != s.end() && std::isdigit(*it)) ++it;
     return !s.empty() && it == s.end();
+}
+
+bool load_from_file(std::string filename){
+    std::ifstream File(filename);
+    if(!File.is_open()){
+        std::cout << "could not open file: " << filename << endl;
+        return false;
+    }
+    std::string in;
+    while(getline(File, in)){
+        
+    }
+    File.close();
+    return true;
+}
+
+bool write_to_file(std::string filename){
+    
+    return true;
 }

@@ -12,7 +12,25 @@ int big_blind;
 int dealer;
 void run_game(){
     print_instructions();
-    get_players();
+    cout << "New game (\"N\") or load from existing file (\"L\")?" << endl;
+    char response;
+    cin >> response;
+    bool exit = false;
+    while(!exit){
+        switch(response) {
+            case 'N' :
+                get_players();
+                exit = true;
+            case 'L' :
+                cout << "what file would you like to read from?" << endl;
+                std::string filename;
+                cin >> filename;
+                load_players(filename);
+                exit = true;
+            default :
+                cout << "New game (\"N\") or load from existing file (\"L\")?" << endl;
+        }
+    }
     dealer = rand() % players.size();
     
 }
