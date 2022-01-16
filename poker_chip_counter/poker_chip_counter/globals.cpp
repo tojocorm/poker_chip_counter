@@ -156,7 +156,30 @@ bool load_from_file(std::string filename){
 }
 
 bool write_to_file(std::string filename){
-    
+    std::ofstream myfile (filename);
+    if (myfile.is_open()){
+        myfile << "POKER HISTORY" << endl;
+        for(auto it = players.begin(); it != players.end(); ++it){
+            myfile << it->second->get_name();
+            if(it->second->get_buys() != 0){
+                myfile << " " << it->second->get_buys() << " " << it->second->get_stack();
+            }
+            myfile << endl;
+            std::vector<std::pair<int, int> > history = it->second->get_history();
+            for(size_t i = 0; i < history.size(); ++i){
+                myfile << history[i].first << " " << history[i].second;
+                if(i != (history.size() - 1)){
+                    myfile << " ";
+                }
+            }
+            myfile << endl;
+        }
+        myfile.close();
+    }
+    else {
+        cout << "Unable to open file";
+        return false;
+    }
     return true;
 }
 

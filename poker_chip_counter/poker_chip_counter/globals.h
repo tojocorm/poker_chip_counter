@@ -35,7 +35,11 @@ class Player
     }
     
     void set_history(std::vector<std::pair<int, int> > history_in){
-        
+        history = history_in;
+    }
+    
+    std::vector<std::pair<int, int> > get_history(){
+        return history;
     }
     
     int get_stack(){

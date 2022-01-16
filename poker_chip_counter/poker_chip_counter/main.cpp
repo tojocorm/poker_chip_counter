@@ -10,8 +10,7 @@ std::vector< Player* > table;
 int little_blind;
 int big_blind;
 int dealer;
-void run_game(){
-    print_instructions();
+void create_players(){
     char response;
     bool exit = false;
     while(!exit){
@@ -36,9 +35,14 @@ void run_game(){
             }
         }
     }
-    dealer = rand() % players.size();
-    
 }
+void run_game(){
+    print_instructions();
+    create_players();
+    dealer = rand() % players.size();
+    write_to_file("/Users/tobycormack/Desktop/SuperSenior/projects/poker_chip_counter/poker_chip_counter/poker_chip_counter/test1out.txt");
+}
+
 
 
 
