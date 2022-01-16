@@ -29,8 +29,9 @@ class Player
         stack += rebuy;
         total_buys += rebuy;
     }
-    void set_stack_and_buy(int stack, int buy){
-        
+    void set_stack_and_buy(int new_stack, int new_buy){
+        stack = new_stack;
+        total_buys = new_buy;
     }
     
     void set_history(std::vector<std::pair<int, int> > history_in){
@@ -43,7 +44,10 @@ class Player
     int get_buys(){
         return total_buys;
     }
-    
+    std::string get_name(){
+        return name;
+    }
+
 private:
     std::string name;
     int stack;
@@ -63,7 +67,6 @@ extern int dealer;
 bool is_number(std::string s);
 void print_instructions();
 void get_players();
-void load_players(std::string filename);
 void error_in_player_entry();
 bool add_player(std::string player_name, std::string buy_in);
 bool fix_player(std::string player_name, std::string buy_in);
@@ -71,5 +74,6 @@ bool remove_player(std::string name);
 bool load_from_file(std::string filename);
 bool write_to_file(std::string filename);
 std::vector<std::string> split_space(std::string buys);
+void read_from_file(std::ifstream &File);
 
 #endif

@@ -8,9 +8,9 @@ void print_instructions(){
 
 void error_in_player_entry(){
     cout << "Please enter one of: " << endl;
-    cout << "\"N name chipCount\""  << endl;
-    cout << "\"C name chipCount\"" << endl;
-    cout << "\"R playerNameToRemove blank\"" << endl;
+    cout << "\"N name chipCount\" to add a player or add a player to the game who exists but is not currently playing"  << endl;
+    cout << "\"C name chipCount\" to change a current players chipCount" << endl;
+    cout << "\"R playerNameToRemove blank\" to remove a player" << endl;
     cout << "\"B littleBlind bigBlind\" -- if you enter this, the initial player setup time will be over" << endl;
 }
 void get_players(){
@@ -24,25 +24,28 @@ void get_players(){
     while(!exit){
         cin >> instruction >> name >> buy_in;
         switch(instruction) {
-            case 'N'  :
+            case 'N': {
                 if( add_player(name, buy_in) ){
                     break;
                 }
                 error_in_player_entry();
                 break;
-            case 'C'  :
+            }
+            case 'C': {
                 if( fix_player(name, buy_in) ){
                     break;
                 }
                 error_in_player_entry();
                 break;
-            case 'R' :
+            }
+            case 'R': {
                 if (remove_player(name) ){
                     break;
                 }
                 error_in_player_entry();
                 break;
-            case 'B'  :
+            }
+            case 'B': {
                 if(!is_number(name) || !is_number(buy_in)){
                     cout << "Blinds must be integers" << endl;
                     error_in_player_entry();
@@ -53,13 +56,12 @@ void get_players(){
                 little_blind = std::stoi(name);
                 cout << "Blinds are " << little_blind << " and " << big_blind << endl;
                 break;
-            default :
+            }
+            default: {
                 error_in_player_entry();
+            }
         }
     }
-}
-void load_players(std::string filename){
-    
 }
 
 bool add_player(std::string player_name, std::string buy_in){
@@ -69,8 +71,10 @@ bool add_player(std::string player_name, std::string buy_in){
     }
     int player_chips = std::stoi(buy_in);
     if(players.find(player_name) != players.end()){
-        cout << "player name already taken!" << endl;
-        return false;
+        if(players[player_name]->get_buys() != 0){
+            cout << "player name already taken!" << endl;
+            return false;
+        }
     }
     if(player_chips < 0){
         cout << "please enter a positive stack" << endl;
@@ -78,7 +82,12 @@ bool add_player(std::string player_name, std::string buy_in){
     }
     else{
         cout << "Player: " << player_name << ", Stack: " << player_chips << endl;
-        players[player_name] = new Player(player_name, player_chips);
+        if(players.find(player_name) == players.end()){
+            players[player_name] = new Player(player_name, player_chips);
+        }
+        else{
+            players[player_name]->set_stack_and_buy(player_chips, player_chips);
+        }
         table.push_back(players[player_name]);
         return true;
     }
@@ -139,51 +148,10 @@ bool load_from_file(std::string filename){
         return false;
     }
     
-
-    while(getline(File, in)){
-        std::vector<std::string> first_line = split_space(in);
-        std::string name = first_line[0];
-        int curr_stack;
-        int curr_buys;
-
-        // game in progress
-        if(first_line.size() > 1){
-            curr_stack = std::stoi(first_line[2]);
-            curr_buys = std::stoi(first_line[1]);
-            players[name] = new Player(name, curr_buys);
-            players[name]->set_stack_and_buy(curr_stack, curr_buys);
-            table.push_back(players[name]);
-            cout << "Player initialized with name: " << name << ", current buys: " << curr_buys << ", current stack: " << curr_stack << endl;
-        }
-
-        // new game or new player
-        else{
-            cout << "How many chips would you like this player to buy in with -- enter 0 if not playing." << endl;
-            cin >> curr_buys;
-            if(curr_buys != 0){
-                players[name] = new Player(name, curr_buys);
-                table.push_back(players[name]);
-                cout << "Player initialized with name: " << name << ", current buys: " << curr_buys << ", current stack: " << curr_buys << endl;
-            }
-            else{
-                cout << "Player: " << name << " not playing in this game" << endl;
-                players[name] = new Player(name, 0);
-            }
-        }
-
-        getline(File, in);
-        std::vector<std::string> history = split_space(in);
-        std::vector<std::pair<int, int> > history_player;
-        for(size_t i = 0; i < history.size()/2; ++i){
-            std::pair<int, int> in_out = std::make_pair(std::stoi(history[2*i]), std::stoi(history[2*i + 1]));
-            history_player.push_back(in_out);
-        }
-        players[name]->set_history(history_player);
-    }
-
-    
-    
+    read_from_file(File);
     File.close();
+
+    get_players();
     return true;
 }
 
@@ -210,4 +178,54 @@ std::vector<std::string> split_space(std::string input){
     // Push back the last pathname
     ret_vec.push_back(input);
     return ret_vec;
+}
+
+void read_from_file(std::ifstream &File){
+    std::string in;
+    while(getline(File, in)){
+        std::vector<std::string> first_line = split_space(in);
+        std::string name = first_line[0];
+        int curr_stack;
+        int curr_buys;
+
+        // game in progress
+        if(first_line.size() > 1){
+            curr_stack = std::stoi(first_line[2]);
+            curr_buys = std::stoi(first_line[1]);
+            players[name] = new Player(name, curr_buys);
+            players[name]->set_stack_and_buy(curr_stack, curr_buys);
+            table.push_back(players[name]);
+            cout << "Player initialized with name: " << name << ", current buys: " << curr_buys << ", current stack: " << curr_stack << endl;
+        }
+
+        // new game or new player
+        else{
+            cout << "How many chips would you like player: " << name << ", to buy in with -- enter 0 if not playing." << endl;
+            cin >> curr_buys;
+            if(curr_buys != 0){
+                players[name] = new Player(name, curr_buys);
+                table.push_back(players[name]);
+                cout << "Player initialized with name: " << name << ", current buys: " << curr_buys << ", current stack: " << curr_buys << endl;
+            }
+            else{
+                cout << "Player: " << name << " not playing in this game" << endl;
+                players[name] = new Player(name, 0);
+            }
+        }
+
+        getline(File, in);
+        std::vector<std::string> history = split_space(in);
+        std::vector<std::pair<int, int> > history_player;
+        for(size_t i = 0; i < history.size()/2; ++i){
+            std::pair<int, int> in_out = std::make_pair(std::stoi(history[2*i]), std::stoi(history[2*i + 1]));
+            history_player.push_back(in_out);
+        }
+        players[name]->set_history(history_player);
+    }
+    
+    cout << endl << endl;
+    for(size_t i = 0; i < table.size(); ++i){
+        cout << "Player playing with name: " << table[i]->get_name() << ", current buys: " << table[i]->get_buys() << ", current stack: " << table[i]->get_stack() << endl;
+    }
+
 }
