@@ -252,3 +252,24 @@ void read_from_file(std::ifstream &File){
     }
 
 }
+
+
+void end_of_game(std::string filename){
+    cout << "End of game after " << hand_num << " hands"<< endl;
+    for(auto it = players.begin(); it != players.end(); ++it){
+        int stack = it->second->get_stack();
+        int buys = it->second->get_buys();
+        std::vector<std::pair<int, int> > history = it->second->get_history();
+        history.push_back(std::make_pair(buys, stack));
+        it->second->set_history(history);
+        it->second->set_stack_and_buy(0, 0);
+        int buys_tot = 0;
+        int cash_out_tot = 0;
+        for(int i = 0; i < history.size(); ++i){
+            buys_tot += history[i].first;
+            cash_out_tot += history[i].second;
+        }
+        cout << "Player " << it->first << " cashes out with " << stack << " and a overall wins of " << cash_out_tot - buys_tot << endl;
+        write_to_file(filename);
+    }
+}
