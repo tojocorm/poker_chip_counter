@@ -132,8 +132,10 @@ bool is_number(std::string s){
     return !s.empty() && it == s.end();
 }
 
-bool load_from_file(std::string filename){
+bool load_from_file(std::string no_base){
+    std::string filename = base_directory + no_base;
     std::ifstream File(filename);
+
     if(!File.is_open()){
         std::cout << "could not open file: " << filename << endl;
         return false;
@@ -270,6 +272,93 @@ void end_of_game(std::string filename){
             cash_out_tot += history[i].second;
         }
         cout << "Player " << it->first << " cashes out with " << stack << " and a overall wins of " << cash_out_tot - buys_tot << endl;
-        write_to_file(filename);
+        if(filename != ""){
+            filename = base_directory + filename;
+            write_to_file(filename);
+        }
+    }
+}
+
+void create_players(){
+    std::string resp;
+    bool exit = false;
+    while(!exit){
+        cout << "New game (\"N\") or load from existing file (\"L\")?" << endl;
+        cin >> resp;
+        if(resp.size() != 1){
+            continue;
+        }
+        char response = resp[0];
+        switch (response) {
+            case 'N': {
+                get_players();
+                exit = true;
+                break;
+            }
+            case 'L': {
+                cout << "what file would you like to read from?" << endl;
+                std::string filename;
+                cin >> filename;
+                exit = load_from_file(filename);
+                if(exit){
+                    infile_glob = filename;
+                    tempoutfile = base_directory + "poker_temp_" + filename;
+                }
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+}
+
+std::string get_out_file(){
+    std::string resp;
+    while(true){
+        cout << "Would you like to save the current game; Yes \"Y\" No \"N\"" << endl;
+
+        cin >> resp;
+        if(resp.size() != 1){
+            continue;
+        }
+        char response = resp[0];
+        switch (response) {
+            case 'Y': {
+                std::string filename = "";
+                while(filename.size() < 1){
+                    cout << "Enter filename of file to write to:" << endl;
+                    cin >> filename;
+                }
+                return filename;
+            }
+            case 'N': {
+                cout << "Confirm that you would like to delete all data from this game - enter \"Y\", else enter anything else" << endl;
+                cin >> resp;
+                if(resp.size() != 1){
+                    continue;
+                }
+                if(resp[0] != 'Y'){
+                    continue;
+                }
+                cout << "Game data (not starter file) deleted" << endl;
+                return "";
+            }
+            default: {
+                break;
+            }
+        }
+    }
+}
+
+void delete_data(){
+    if( std::remove(tempoutfile.c_str()) != 0 ){
+        cout << "Error: temp file not deleted" << endl;
+    }
+    else{
+        cout << "Tempfile successfully deleted" << endl;
+    }
+    for(auto it = players.begin(); it != players.end(); ++it){
+        delete it->second;
     }
 }

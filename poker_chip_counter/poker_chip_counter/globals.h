@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <vector>
 #include <stdlib.h>
+#include <stdio.h>
 
 using std::cout;
 using std::cin;
@@ -69,6 +70,9 @@ extern int little_blind;
 extern int big_blind;
 extern int dealer;
 extern int hand_num;
+extern std::string infile_glob;
+extern std::string tempoutfile;
+extern std::string base_directory;
 
 bool is_number(std::string s);
 void print_instructions();
@@ -77,10 +81,13 @@ void error_in_player_entry();
 bool add_player(std::string player_name, std::string buy_in);
 bool fix_player(std::string player_name, std::string buy_in);
 bool remove_player(std::string name);
-bool load_from_file(std::string filename);
+bool load_from_file(std::string no_base);
 bool write_to_file(std::string filename);
 std::vector<std::string> split_space(std::string buys);
 void read_from_file(std::ifstream &File);
 void end_of_game(std::string filename);
+void create_players();
+std::string get_out_file();
+void delete_data();
 
 #endif
